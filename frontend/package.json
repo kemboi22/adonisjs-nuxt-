@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.11.4",
+    "@pinia-plugin-persistedstate/nuxt": "^1.2.0",
     "@pinia/nuxt": "^0.5.1",
     "shadcn-nuxt": "^0.10.2",
     "typescript": "^5.4.3"
