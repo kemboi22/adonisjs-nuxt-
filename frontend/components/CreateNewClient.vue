@@ -1,40 +1,84 @@
 <script setup lang="ts">
+import type {Client} from "~/types";
 
+const formData = ref<Client>(<Client>{})
+const loading = ref(false)
+const isOpen = ref(false)
+const submit = async () => {
+  loading.value = true
+  const {data} = await useApiFetch('/clients', {
+    method: "POST",
+    body: {
+      ...formData.value
+    }
+  })
+  loading.value = false
+  isOpen.value = false
+}
 </script>
 
 <template>
-  <Dialog>
+  <Dialog :open="isOpen">
     <DialogTrigger as-child>
-      <Button variant="outline">
-        Edit Profile
+      <Button @click.prevent="() => isOpen = true">
+        Add
       </Button>
     </DialogTrigger>
     <DialogContent class="sm:max-w-[425px]">
       <DialogHeader>
-        <DialogTitle>Edit profile</DialogTitle>
-        <DialogDescription>
-          Make changes to your profile here. Click save when you're done.
-        </DialogDescription>
+        <DialogTitle>Add New User</DialogTitle>
       </DialogHeader>
-      <div class="grid gap-4 py-4">
-        <div class="grid grid-cols-4 items-center gap-4">
-          <Label for="name" class="text-right">
-            Name
-          </Label>
-          <Input id="name" value="Pedro Duarte" class="col-span-3" />
+      <form @submit.prevent="submit">
+        <div class="grid grid-cols-2 gap-4 py-4">
+          <div>
+            <Label>First Name</Label>
+            <Input type="text" v-model="formData.firstName"/>
+          </div>
+          <div>
+            <Label>Last Name</Label>
+            <Input type="text" v-model="formData.lastName"/>
+          </div>
+          <div>
+            <Label>Age</Label>
+            <Input type="number" v-model="formData.age"/>
+          </div>
+          <div>
+            <Label>Town</Label>
+            <Input type="text" v-model="formData.town"/>
+          </div>
+          <div>
+            <Label>Gender</Label>
+            <Select v-model="formData.gender">
+              <SelectTrigger>
+                <SelectValue placeholder="Select a Gender" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Gender</SelectLabel>
+                  <SelectItem value="male">
+                    Male
+                  </SelectItem>
+                  <SelectItem value="female">
+                    Female
+                  </SelectItem>
+                  <SelectItem value="others">
+                    Others
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+
         </div>
-        <div class="grid grid-cols-4 items-center gap-4">
-          <Label for="username" class="text-right">
-            Username
-          </Label>
-          <Input id="username" value="@peduarte" class="col-span-3" />
-        </div>
-      </div>
-      <DialogFooter>
-        <Button type="submit">
-          Save changes
-        </Button>
-      </DialogFooter>
+        <DialogFooter>
+          <Button variant="destructive" @click.prevent="() => isOpen = false">
+            Close
+          </Button>
+          <Button type="submit">
+            Save
+          </Button>
+        </DialogFooter>
+      </form>
     </DialogContent>
   </Dialog>
 </template>

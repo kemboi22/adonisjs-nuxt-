@@ -5,6 +5,8 @@ export default defineNuxtPlugin(() => {
     const $apiFetch = $fetch.create({
         baseURL: config.public.apiBaseUrl,
         onRequest({ request, options, error }) {
+            console.log(options)
+            console.log(accessToken)
             if (accessToken) {
                 options.headers = {
                     ...options.headers,
@@ -17,7 +19,7 @@ export default defineNuxtPlugin(() => {
         },
         onResponseError({ response, options, error }) {
             if (response.status === 401) {
-                navigateTo('/login')
+                navigateTo('/auth/login')
                 return;
             }
         }

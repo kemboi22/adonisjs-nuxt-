@@ -3,3 +3,11 @@ export interface User {
     email: string
     password: string
 }
+export interface Client {
+    id?: number
+    firstName: string
+    lastName: string
+    age: number
+    town: string
+    gender: string
+}

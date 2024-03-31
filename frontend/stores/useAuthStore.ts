@@ -18,6 +18,7 @@ export const useAuthStore = defineStore('auth', () => {
         // @ts-ignore
         user.value = data.value.data
         loading.value = false
+        await navigateTo('/')
     }
     const register = async (registerUser: User) => {
         loading.value = true
@@ -32,6 +33,7 @@ export const useAuthStore = defineStore('auth', () => {
         // @ts-ignore
         user.value = data.value.data
         loading.value = false
+        await navigateTo('/')
     }
 
     return {
