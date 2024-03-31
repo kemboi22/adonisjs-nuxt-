@@ -19,11 +19,26 @@ export const useAuthStore = defineStore('auth', () => {
         user.value = data.value.data
         loading.value = false
     }
+    const register = async (registerUser: User) => {
+        loading.value = true
+        const {data, error} = await useApiFetch('/register', {
+            method: "POST",
+            body: {
+                ...registerUser
+            }
+        })
+        // @ts-ignore
+        accessToken.value = data.value.token
+        // @ts-ignore
+        user.value = data.value.data
+        loading.value = false
+    }
 
     return {
         login,
         loading,
-        accessToken
+        accessToken,
+        register
     }
 }, {
     persist: true
