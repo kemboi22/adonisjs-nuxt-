@@ -16,7 +16,7 @@ const formData = ref<User>(<User>{})
       </CardDescription>
     </CardHeader>
     <CardContent>
-      <form @submit.prevent="authStore.forgotPassword(formData)">
+      <form @submit.prevent="authStore.forgotPassword(formData.email)">
         <div class="grid gap-4">
           <div class="grid gap-2">
             <Label for="email">Email</Label>

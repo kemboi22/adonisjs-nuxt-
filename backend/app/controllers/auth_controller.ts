@@ -31,32 +31,43 @@ export default class AuthController {
 
   async forgotPassword({ request }: HttpContext) {
     let body = request.body()
-    let user = await User.findOrFail('email', body.email)
+    let user = await User.findByOrFail('email', body.email)
     let rememberToken = Math.floor(Math.random() * 900000) + 100000
     user.rememberToken = rememberToken.toString()
     await user.save()
-    await this.sendRememberToken(user.phone, `Your password reset token is ${rememberToken}`)
+    function formatPhoneNumber(phone: string) {
+      if (phone.startsWith('07')) {
+        return phone.replace('07', '2547')
+      }
+      return phone
+    }
+    await this.sendRememberToken(
+      formatPhoneNumber(user.phone),
+      `Your password reset token is ${rememberToken}`
+    )
     return {
-      message: 'Password reset link sent to your email',
+      message: 'Password reset link sent to your phone',
     }
   }
 
   async confirmResetToken({ request }: HttpContext) {
     let body = request.body()
-    let user = await User.findOrFail('rememberToken', body.rememberToken)
+    let user = await User.findByOrFail('rememberToken', body.rememberToken)
     if (!user) {
       return {
+        status: 400,
         message: 'Invalid token',
       }
     }
     return {
+      status: 200,
       message: 'Token is valid',
     }
   }
 
   async resetPassword({ request }: HttpContext) {
     let body = request.body()
-    let user = await User.findOrFail('rememberToken', body.rememberToken)
+    let user = await User.findByOrFail('rememberToken', body.rememberToken)
     user.password = body.password
     user.rememberToken = null
     await user.save()
@@ -87,6 +98,6 @@ export default class AuthController {
       }),
     })
 
-    console.log(response.json())
+    console.log(await response.json())
   }
 }

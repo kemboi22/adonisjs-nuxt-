@@ -31,9 +31,9 @@ const formData = ref<User>(<User>{})
           <div class="grid gap-2">
             <div class="flex items-center">
               <Label for="password">Password</Label>
-              <a href="#" class="ml-auto inline-block text-sm underline">
+              <NuxtLink to="/auth/forgot-password" class="ml-auto inline-block text-sm underline">
                 Forgot your password?
-              </a>
+              </NuxtLink>
             </div>
             <Input id="password" type="password" required v-model="formData.password"/>
           </div>
