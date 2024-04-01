@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type {Client} from "~/types";
-
+definePageMeta({
+  middleware: ['auth']
+})
 const clients = ref<Client[]>([])
 const getClients = async () => {
   const {data} = await useApiFetch('/clients')

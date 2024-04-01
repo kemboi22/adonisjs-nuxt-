@@ -40,7 +40,8 @@ export const useAuthStore = defineStore('auth', () => {
         login,
         loading,
         accessToken,
-        register
+        register,
+        user
     }
 }, {
     persist: true
