@@ -35,12 +35,19 @@ export default class ClientsController {
   async update({ params, request }: HttpContext) {
     let client = await Client.findOrFail(params.id)
     const body = request.body()
-    return client.merge({
-      firstName: body.firstName,
-      lastName: body.lastName,
-      age: body.age,
-      town: body.town,
-    })
+    // client.firstName = body.firstName
+    // client.lastName = body.lastName
+    // client.age = body.age
+    // client.town = body.town
+
+    return client
+      .merge({
+        firstName: body.firstName,
+        lastName: body.lastName,
+        age: body.age,
+        town: body.town,
+      })
+      .save()
   }
 
   /**
