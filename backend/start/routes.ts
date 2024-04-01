@@ -23,3 +23,6 @@ router
   )
 router.post('/login', [AuthController, 'login'])
 router.post('/register', [AuthController, 'register'])
+router.post('/forgot-password', [AuthController, 'forgotPassword'])
+router.post('/confirm-remember-token', [AuthController, 'confirmResetToken'])
+router.post('/reset-password', [AuthController, 'resetPassword'])
