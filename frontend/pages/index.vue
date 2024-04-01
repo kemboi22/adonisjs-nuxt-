@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type {Client} from "~/types";
 definePageMeta({
-  middleware: ['auth']
+  // middleware: ['auth']
 })
 const clients = ref<Client[]>([])
 const authStore = useAuthStore()
