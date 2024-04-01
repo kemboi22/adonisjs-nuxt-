@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type {User} from "~/types";
-
+definePageMeta({
+  middleware: ['guest']
+})
 const authStore = useAuthStore()
 const formData = ref<User>(<User>{})
 </script>
