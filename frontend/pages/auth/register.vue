@@ -35,6 +35,10 @@ const formData = ref<User>(<User>{})
             />
           </div>
           <div class="grid gap-2">
+            <Label for="phoneNumber">Phone Number</Label>
+            <Input id="phoneNumber" type="text" v-model="formData.phone" />
+          </div>
+          <div class="grid gap-2">
             <Label for="password">Password</Label>
             <Input id="password" type="password" v-model="formData.password" />
           </div>

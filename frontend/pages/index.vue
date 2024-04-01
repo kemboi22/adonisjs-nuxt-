@@ -4,9 +4,9 @@ definePageMeta({
   middleware: ['auth']
 })
 const clients = ref<Client[]>([])
+const authStore = useAuthStore()
 const getClients = async () => {
   const {data} = await useApiFetch('/clients')
-  console.log(data.value)
   // @ts-ignore
   clients.value = data.value
 }
@@ -15,8 +15,11 @@ getClients()
 
 <template>
   <div class="container">
-    <div class="p-3">
+    <div class="p-3 flex justify-between">
       <CreateNewClient/>
+      <Button variant="destructive" @click.prevent="authStore.logout()">
+        Logout
+      </Button>
     </div>
     <Card>
       <CardHeader>

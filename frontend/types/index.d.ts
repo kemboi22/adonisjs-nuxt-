@@ -1,7 +1,8 @@
 export interface User {
     fullName: string
     email: string
-    password: string
+    password: string,
+    phone: string
 }
 export interface Client {
     id?: number

@@ -36,12 +36,33 @@ export const useAuthStore = defineStore('auth', () => {
         await navigateTo('/')
     }
 
+    const logout = async () => {
+        accessToken.value = ""
+        user.value = <User>{}
+        await navigateTo('/auth/login')
+    }
+
+    const forgotPassword = async (email: string) => {
+        const {data} = await useApiFetch('/forgot-password', {
+            method: "POST",
+            body: {
+                email: email
+            }
+        })
+        if (data.value)
+        {
+            await navigateTo('/auth/reset-password')
+        }
+    }
+
     return {
         login,
         loading,
         accessToken,
         register,
-        user
+        user,
+        logout,
+        forgotPassword
     }
 }, {
     persist: true
