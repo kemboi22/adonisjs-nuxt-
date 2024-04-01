@@ -1,16 +1,31 @@
 <script setup lang="ts">
 import type {Client} from "~/types";
+import type {UnwrapRef} from "vue";
 definePageMeta({
-  // middleware: ['auth']
+  middleware: ['auth']
 })
 const clients = ref<Client[]>([])
 const authStore = useAuthStore()
+const editModalOpen = ref(false)
+const selectedClient = ref<Client>(<Client>{})
 const getClients = async () => {
   const {data} = await useApiFetch('/clients')
   // @ts-ignore
   clients.value = data.value
 }
 getClients()
+const openModal = (client: Client) => {
+  editModalOpen.value = true
+  selectedClient.value = client
+  console.log(editModalOpen.value)
+}
+
+const deleteClient = async (id: number | undefined) => {
+  await useApiFetch('/clients/'+id, {
+    method: "DELETE"
+  })
+  await getClients()
+}
 </script>
 
 <template>
@@ -37,6 +52,7 @@ getClients()
               <TableHead>Age</TableHead>
               <TableHead>Town</TableHead>
               <TableHead>Gender</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -49,10 +65,17 @@ getClients()
               <TableCell>{{ client.age }}</TableCell>
               <TableCell>{{ client.town }}</TableCell>
               <TableCell>{{ client.gender }}</TableCell>
+              <TableCell>
+                <div class="flex justify-between">
+                  <Button @click.prevent="openModal(client)">Edit</Button>
+                  <Button @click.prevent="deleteClient(client?.id)" variant="destructive">Delete</Button>
+                </div>
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>
       </CardContent>
     </Card>
   </div>
+  <EditClientComponent :is-open="editModalOpen" :client="selectedClient" @close="() => editModalOpen = false"/>
 </template>
