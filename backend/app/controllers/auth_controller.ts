@@ -28,4 +28,65 @@ export default class AuthController {
       },
     }
   }
+
+  async forgotPassword({ request }: HttpContext) {
+    let body = request.body()
+    let user = await User.findOrFail('email', body.email)
+    let rememberToken = Math.floor(Math.random() * 900000) + 100000
+    user.rememberToken = rememberToken.toString()
+    await user.save()
+    await this.sendRememberToken(user.phone, `Your password reset token is ${rememberToken}`)
+    return {
+      message: 'Password reset link sent to your email',
+    }
+  }
+
+  async confirmResetToken({ request }: HttpContext) {
+    let body = request.body()
+    let user = await User.findOrFail('rememberToken', body.rememberToken)
+    if (!user) {
+      return {
+        message: 'Invalid token',
+      }
+    }
+    return {
+      message: 'Token is valid',
+    }
+  }
+
+  async resetPassword({ request }: HttpContext) {
+    let body = request.body()
+    let user = await User.findOrFail('rememberToken', body.rememberToken)
+    user.password = body.password
+    user.rememberToken = null
+    await user.save()
+    return {
+      message: 'Password reset successfully',
+    }
+  }
+
+  async sendRememberToken(phone: string, message: string) {
+    const response = await fetch('https://smsportal.hostpinnacle.co.ke/SMSApi/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userid: process.env.HOST_PINNACLE_USER_ID,
+        password: process.env.HOST_PINNACLE_USER_PASSWORD,
+        senderid: process.env.HOST_PINNACLE_SENDER_ID,
+        msgType: 'text',
+        duplicatecheck: 'true',
+        sendMethod: 'quick',
+        sms: [
+          {
+            mobile: [phone],
+            msg: message,
+          },
+        ],
+      }),
+    })
+
+    console.log(response.json())
+  }
 }
